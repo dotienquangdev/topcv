@@ -1,0 +1,14 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: Inter, sans-serif;
+}
+html,
+body {
+  height: 100%;
+}
+a {
+  color: inherit; /* hoặc color: black; nếu muốn cố định màu */
+  text-decoration: none;
+}

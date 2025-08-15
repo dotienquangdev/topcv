@@ -1,0 +1,121 @@
+.jobs {
+  background-color: #f3f5f7;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+.job {
+  background-color: #ffffff;
+  margin: 10px;
+  /* padding: 10px; */
+  width: 375px;
+  height: 120px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+}
+.job_item {
+  border-radius: 10px;
+  box-shadow: 0px 5px 15px rgba(186, 186, 186, 0.25);
+  width: 375px;
+  height: 120px;
+  display: flex;
+  flex-wrap: wrap;
+}
+.job_item:hover {
+  border: 1.5px solid #00b14f;
+}
+.job_item:hover .job-description {
+  color: #00b14f;
+}
+.job_item:hover .job-img {
+  border: 1px solid #00b14f;
+}
+.job-img {
+  width: 55px;
+  height: 55px;
+  border: 1px solid rgb(213, 213, 213);
+  border-radius: 5px;
+  padding: 2px;
+  margin: 5px;
+}
+.job-info {
+  display: block;
+  width: 280px;
+  height: 64px;
+  margin: 5px;
+}
+.job-categoriesName {
+  width: 100%;
+  font-size: 15px;
+  color: #444444;
+  font-weight: 550;
+  margin-left: 11px;
+}
+.job-title {
+  width: 100%;
+  font-size: 16px;
+  font-weight: 550;
+  margin-left: 10px;
+}
+.job_item:hover .job-info .job-title,
+.job_item:hover .job-info .job-categoriesName {
+  color: #00b14f;
+  text-decoration: underline;
+  transition: 0.5s;
+}
+.job-name {
+  margin-left: 10px;
+  width: 280px;
+  font-size: 12px;
+  color: #7a7a7a;
+}
+.job-name:hover {
+  font-size: 13px;
+  /* color: #00b14f; */
+}
+.job-text {
+  width: 100%;
+  margin-top: -25px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.job-many {
+  display: flex;
+}
+.job-size {
+  color: black;
+  font-size: 12px;
+  margin-right: 10px;
+  /* background-color: #00b14f; */
+  width: 150px;
+  margin: 5px;
+}
+.job-location {
+  display: flex;
+  justify-content: center;
+  /* width: 70px; */
+  padding: 7px;
+  background-color: #edeff0;
+  border-radius: 10px;
+  font-size: 12px;
+  margin: 3px;
+}
+.job-many {
+  margin: 3px;
+
+  display: flex;
+  justify-content: center;
+  /* width: 70px; */
+  padding: 7px;
+  background-color: #edeff0;
+  border-radius: 10px;
+  font-size: 12px;
+}
+.job-textItem {
+  display: flex;
+}
