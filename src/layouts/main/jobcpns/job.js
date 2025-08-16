@@ -66,8 +66,6 @@ function Jobs() {
           ),
         ];
         setCategories(categoryNames);
-
-        // Lấy danh sách địa điểm duy nhất
         const locs = [...new Set(data.docs.map((job) => job.location))];
         setLocations(locs);
       } else {
@@ -82,6 +80,9 @@ function Jobs() {
     <div className="">
       <a href="/admin">
         <button>Admin</button>
+      </a>
+      <a href="/userLogin">
+        <button>userLogin</button>
       </a>
       {error && <p>{error}</p>}
 

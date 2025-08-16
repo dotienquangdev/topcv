@@ -1,9 +1,13 @@
 import "./header.css";
+import "./headerUser.css";
 import dataHeader from "../../data/dataHeader";
 import { useEffect, useState } from "react";
-
+import { Link } from "react-router-dom";
 function Header() {
   const [dataCategories, setDataCategories] = useState([]);
+  const [user, setUser] = useState(null); // Lưu thông tin người dùng
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // Trạng thái menu người dùng
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
 
   useEffect(() => {
     fetch("http://localhost:9000/api/categories/getCategories")
@@ -11,7 +15,26 @@ function Header() {
       .then((data) => setDataCategories(data.categories || []))
       .catch((err) => console.error(err));
   }, []);
-  console.log(dataCategories);
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+  };
+  // Kiểm tra người dùng đăng nhập từ localStorage
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("user"));
+    if (userData) {
+      setUser(userData); // Lưu thông tin người dùng vào state
+    }
+  }, []);
+  // Hàm toggle mở/đóng menu người dùng
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+  // Hàm đăng xuất
+  const handleLogout = () => {
+    localStorage.removeItem("user"); // Xóa thông tin người dùng khỏi localStorage
+    setUser(null); // Cập nhật lại state user là null
+    setIsMenuOpen(false); // Đóng menu
+  };
 
   return (
     <div className="header">
@@ -122,7 +145,62 @@ function Header() {
           ))}
         </div>
 
-        <div className="topCV_user">Đỗ Tiến Quang</div>
+        <div className="topCV_user">
+          <div className="header-user">
+            <div className="switch-container">
+              <input
+                type="checkbox"
+                className="switch"
+                id="themeSwitch"
+                onChange={toggleTheme}
+                checked={theme === "dark"}
+              />
+              <label htmlFor="themeSwitch">
+                {theme === "dark" ? (
+                  <i className="fa-solid fa-sun"></i>
+                ) : (
+                  <i className="fa-solid fa-moon"></i>
+                )}
+              </label>
+            </div>
+
+            <div className="headerUser-setting">
+              <i className="fa-solid fa-gear"></i>
+            </div>
+            <div className="headerUser-id" onClick={toggleMenu}>
+              <span>
+                {user ? (
+                  <img
+                    className="user-menuImg"
+                    src={user.avatar_url}
+                    alt={user.fullName}
+                  />
+                ) : (
+                  "Đăng nhập"
+                )}
+              </span>
+            </div>
+
+            {isMenuOpen && (
+              <div className="user-menu">
+                {user ? (
+                  <div className="user-menu-title">
+                    <img src={user.avatar_url} alt={user.fullName} />
+                    <span>{user.fullName}</span>
+                    <button onClick={handleLogout}>Đăng xuất</button>
+                  </div>
+                ) : (
+                  <div className="user-menu-titleNone">
+                    <p>Tài khoản: Chưa đăng nhập</p>
+                    <Link to="/userLogin">
+                      <button>Đăng nhập</button>
+                    </Link>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -13,6 +13,9 @@ import JobsAdmin from "../pages/Admin/jobs";
 import CompaniesAdmin from "../pages/Admin/companies";
 import CategoriesAdmin from "../pages/Admin/categories";
 import UserAdmin from "../pages/Admin/user";
+import Login from "../layouts/User/login/login";
+import Register from "../layouts/User/Register/register";
+import Auth from "../layouts/User/Auth/auth";
 
 function AllRouter() {
   const dispatch = useDispatch();
@@ -23,13 +26,42 @@ function AllRouter() {
       dispatch(systemInfo(result));
     };
     fetchSystem();
-  }, []);
+  }, [dispatch]); // ✅ thêm dispatch để hết warning
 
   const system = useSelector((state) => state.systemInfoReducer);
 
   return (
     <HelmetProvider>
       <Routes>
+        <Route element={<Auth />}>
+          <Route
+            path="/userLogin"
+            element={
+              <Login title={`${system?.siteName || "Zing"}-Đăng Nhập`} />
+            }
+          ></Route>
+
+          {/* <Route
+            path="/userLogout"
+            element={
+              <Logout title={`${system?.siteName || "Zing"}-Đăng Nhập`} />
+            }
+          ></Route> */}
+          <Route
+            path="/userRegister"
+            element={
+              <Register title={`${system?.siteName || "Zing"}-Đăng ký`} />
+            }
+          ></Route>
+          {/* <Route
+            path="/userForgotPassword"
+            element={
+              <ForgotPassword
+                title={`${system?.siteName || "Zing"}-Đổi mật khẩu`}
+              />
+            }
+          ></Route> */}
+        </Route>
         <Route path="/admin" element={<Admin />}>
           <Route
             path="/admin/jobs"
