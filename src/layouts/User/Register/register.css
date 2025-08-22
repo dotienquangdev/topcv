@@ -103,3 +103,32 @@
     transform: translateY(0);
   }
 }
+/* 
+.userRegister-otp {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+.userRegister-otp span {
+  width: 140px;
+  font-size: 11px;
+  margin-left: 290px;
+  margin-top: -45px;
+  color: #555;
+}
+
+.userRegister-otp span p {
+  font-size: 11px;
+  background-color: #fff;
+  color: #00b14f;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.userRegister-otp span p:hover {
+  background-color: #fff;
+  color: #008f3a;
+  text-decoration: underline;
+} */

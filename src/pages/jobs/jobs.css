@@ -8,7 +8,6 @@
 .job {
   background-color: #ffffff;
   margin: 10px;
-  /* padding: 10px; */
   width: 375px;
   height: 120px;
   display: flex;
@@ -75,7 +74,6 @@
 }
 .job-name:hover {
   font-size: 13px;
-  /* color: #00b14f; */
 }
 .job-text {
   width: 100%;
@@ -107,7 +105,6 @@
 }
 .job-many {
   margin: 3px;
-
   display: flex;
   justify-content: center;
   /* width: 70px; */

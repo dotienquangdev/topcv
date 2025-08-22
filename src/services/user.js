@@ -94,7 +94,6 @@ const deleteUserDelete = async (id) => {
   }
   return await response.json();
 };
-
 const forgotPasswordPost = async (email) => {
   try {
     const res = await _post(`/user/forgot`, { email });

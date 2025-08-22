@@ -45,6 +45,31 @@ function JobsItemId({ title }) {
     setShowApplyModal(true);
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+    formData.append("user_id", userApply._id);
+    formData.append("job_id", job._id);
+
+    try {
+      const res = await fetch("http://localhost:9000/api/job-applications", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        alert("Ứng tuyển thành công!");
+        setShowApplyModal(false);
+      } else {
+        alert("Ứng tuyển thất bại!");
+      }
+    } catch (err) {
+      console.error("Lỗi gửi hồ sơ:", err);
+    }
+  };
+
   if (!job) return <p>Đang tải dữ liệu...</p>;
 
   return (
@@ -91,7 +116,11 @@ function JobsItemId({ title }) {
       {/* Modal Apply (khi đã login) */}
       {showApplyModal && userApply && (
         <div className="modal-overlay">
-          <div className="modal-content">
+          <form
+            className="modal-content"
+            onSubmit={handleSubmit}
+            encType="multipart/form-data"
+          >
             <h2>Ứng tuyển {job.title}</h2>
 
             <div className="apply-section-information">
@@ -110,14 +139,22 @@ function JobsItemId({ title }) {
               </p>
             </div>
 
-            <div className="apply-section">
+            <div className="apply-section apload-file-container">
               <label>Chọn CV để ứng tuyển</label>
-              <input type="file" accept=".pdf,.doc,.docx" />
+              <input
+                name="profile_pic"
+                type="file"
+                accept=".pdf,.doc,.docx"
+                multiple
+              />
             </div>
 
             <div className="apply-section">
               <label>Thư giới thiệu</label>
-              <textarea placeholder="Viết thư giới thiệu ngắn gọn..."></textarea>
+              <textarea
+                name="cover_letter"
+                placeholder="Viết thư giới thiệu ngắn gọn..."
+              ></textarea>
             </div>
 
             <div className="modal-actions">
@@ -129,7 +166,7 @@ function JobsItemId({ title }) {
               </button>
               <button className="btn-submit">Nộp hồ sơ ứng tuyển</button>
             </div>
-          </div>
+          </form>
         </div>
       )}
 

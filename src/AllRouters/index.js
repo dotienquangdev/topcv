@@ -15,7 +15,9 @@ import CategoriesAdmin from "../pages/Admin/categories";
 import UserAdmin from "../pages/Admin/user";
 import Login from "../layouts/User/login/login";
 import Register from "../layouts/User/Register/register";
+import ForgotPassword from "../layouts/User/ForgotPassword/ForgotPassword";
 import Auth from "../layouts/User/Auth/auth";
+import CompanyRegistration from "../layouts/User/companyRegistration/companyRegistration";
 
 function AllRouter() {
   const dispatch = useDispatch();
@@ -40,27 +42,28 @@ function AllRouter() {
               <Login title={`${system?.siteName || "Zing"}-Đăng Nhập`} />
             }
           ></Route>
-
-          {/* <Route
-            path="/userLogout"
+          <Route
+            path="/companyRegistration"
             element={
-              <Logout title={`${system?.siteName || "Zing"}-Đăng Nhập`} />
+              <CompanyRegistration
+                title={`${system?.siteName || "Zing"}-Đăng Nhập`}
+              />
             }
-          ></Route> */}
+          ></Route>
           <Route
             path="/userRegister"
             element={
               <Register title={`${system?.siteName || "Zing"}-Đăng ký`} />
             }
           ></Route>
-          {/* <Route
+          <Route
             path="/userForgotPassword"
             element={
               <ForgotPassword
                 title={`${system?.siteName || "Zing"}-Đổi mật khẩu`}
               />
             }
-          ></Route> */}
+          ></Route>
         </Route>
         <Route path="/admin" element={<Admin />}>
           <Route

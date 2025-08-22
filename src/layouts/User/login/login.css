@@ -96,6 +96,7 @@
 /* link */
 .userButton .links {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   margin-top: 10px;
   font-size: 13px;
@@ -104,6 +105,7 @@
 .userButton .links a {
   color: #00b14f;
   text-decoration: none;
+  margin: 5px;
 }
 
 .userButton .links a:hover {

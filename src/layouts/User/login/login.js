@@ -91,7 +91,8 @@ function Login({ title }) {
             <button onClick={handleLogin}>Đăng Nhập</button>
             <span className="links">
               <Link to={`/userForgotPassword`}>Quên mật khẩu</Link>
-              <Link to={`/userRegister`}>Đăng ký</Link>
+              <Link to={`/userRegister`}>Đăng ký tài khoản</Link>
+              <Link to={`/companyRegistration`}>Đăng ký công ty</Link>
             </span>
           </div>
         </div>

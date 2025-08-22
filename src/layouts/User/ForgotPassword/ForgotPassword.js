@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
-import "./forgotpassword.css";
+import "./ForgotPassword.css";
 import { Helmet } from "react-helmet-async";
 import { useState } from "react";
 import {
   forgotPasswordPost,
   otpPasswordPost,
   resetPasswordPost,
-} from "../../services/user";
+} from "../../../services/user.js";
 
 function ForgotPassword({ title }) {
   const [email, setEmail] = useState("");
@@ -28,7 +28,6 @@ function ForgotPassword({ title }) {
     setLoading(true);
     try {
       const res = await forgotPasswordPost({ email });
-
       if (res.success) {
         setStep(2);
         setError("Đã gửi mã OTP đến email.");
@@ -62,7 +61,6 @@ function ForgotPassword({ title }) {
         setLoading(false);
         return;
       }
-
       // Truyền tokenUser từ kết quả trả về OTP, không lấy từ state
       const resetRes = await resetPasswordPost({
         email,

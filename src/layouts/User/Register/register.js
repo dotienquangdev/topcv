@@ -2,7 +2,11 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./register.css";
 import { Helmet } from "react-helmet-async";
-import { postRegister } from "../../../services/user";
+import {
+  forgotPasswordPost,
+  postRegister,
+  otpPasswordPost,
+} from "../../../services/user";
 
 function Register({ title }) {
   const [fullName, setFullName] = useState("");
@@ -10,8 +14,33 @@ function Register({ title }) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [otp, setOtp] = useState("");
+  const [step, setStep] = useState(1); // 1: Nhập email, 2: Nhập OTP + mật khẩu
+
+  const handleSendOTP = async () => {
+    if (!email) {
+      setError("Vui lòng nhập email.");
+      return;
+    }
+    console.log(email);
+    setError("");
+    setLoading(true);
+    try {
+      const res = await forgotPasswordPost({ email });
+
+      if (res.success) {
+        setStep(2);
+        setError("Đã gửi mã OTP đến email.");
+      } else {
+        setError(res.message || "Không gửi được mã OTP.");
+      }
+    } catch (err) {
+      setError("Lỗi khi gửi mã OTP.");
+    }
+    setLoading(false);
+  };
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -21,14 +50,11 @@ function Register({ title }) {
       setError("Vui lòng điền đầy đủ thông tin.");
       return;
     }
-
     if (password !== confirmPassword) {
       setError("Mật khẩu không khớp.");
       return;
     }
-
     const result = await postRegister({ fullName, email, password });
-
     if (result.success) {
       navigate("/userLogin");
     } else {
@@ -36,6 +62,33 @@ function Register({ title }) {
     }
   };
 
+  // Xác nhận OTP và đổi mật khẩu
+  const handleResetPassword = async () => {
+    if (!otp || !password || !confirmPassword) {
+      setError("Vui lòng nhập đầy đủ thông tin.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError("Mật khẩu nhập lại không khớp.");
+      return;
+    }
+
+    setError("");
+    setLoading(true);
+    try {
+      const otpCheck = await otpPasswordPost({ email, otp }); // gọi API trước
+
+      if (!otpCheck.success) {
+        setError("OTP không chính xác.");
+        setLoading(false);
+        return;
+      }
+      handleRegister();
+    } catch (err) {
+      setError("Lỗi khi đặt lại mật khẩu.");
+    }
+    setLoading(false);
+  };
   return (
     <>
       <Helmet>
