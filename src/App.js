@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { systemInfo } from "./actions/system";
 import { getSystem } from "./services/system";
 import AllRouter from "./AllRouters";
+import NavController from "./components/NavController";
 
 import { AuthProvider } from "./helper/AuthContext";
 
@@ -23,6 +24,7 @@ function App() {
   return (
     <>
       <AuthProvider>
+        <NavController />
         <AllRouter />
       </AuthProvider>
     </>
