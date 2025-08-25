@@ -1,10 +1,11 @@
 import "./App.css";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { systemInfo } from "./actions/system";
 import { getSystem } from "./services/system";
 import AllRouter from "./AllRouters";
 import NavController from "./components/NavController";
+import Chatbot from "./components/Chatbot/Chatbot";
 
 import { AuthProvider } from "./helper/AuthContext";
 
@@ -19,13 +20,12 @@ function App() {
     fetchSystem();
   }, [dispatch]);
 
-  const system = useSelector((state) => state.systemInfoReducer);
-
   return (
     <>
       <AuthProvider>
         <NavController />
         <AllRouter />
+        <Chatbot />
       </AuthProvider>
     </>
   );
