@@ -116,14 +116,9 @@ function JobsAdmin({ title }) {
         salary_max: max,
         created_at: new Date().toISOString(),
       });
-
       if (res.success) {
-        // alert("Thêm thành công!");
-
         setShowAddModal(false);
-        setNewJobs({
-          /* reset fields */
-        });
+        setNewJobs({});
         const updatedJobs = await createJobs(page);
         setJobs(updatedJobs.docs || []);
         showNotification("Đã thêm sản phẩm thành công!", "success");
@@ -299,7 +294,7 @@ function JobsAdmin({ title }) {
               />
             </form>
             <div className="modal-buttons">
-              <button onClick={handleAddJobs}>Thêm mới</button>
+              <button onClick={handleAddJobs}>Thêm mới123</button>
               <button onClick={() => setShowAddModal(false)}>Hủy</button>
             </div>
           </div>

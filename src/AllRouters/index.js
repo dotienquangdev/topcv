@@ -39,28 +39,28 @@ function AllRouter() {
           <Route
             path="/userLogin"
             element={
-              <Login title={`${system?.siteName || "Zing"}-Đăng Nhập`} />
+              <Login title={`${system?.siteName || "TopCV"}-Đăng Nhập`} />
             }
           ></Route>
           <Route
             path="/companyRegistration"
             element={
               <CompanyRegistration
-                title={`${system?.siteName || "Zing"}-Đăng Nhập`}
+                title={`${system?.siteName || "TopCV"}-Đăng Nhập`}
               />
             }
           ></Route>
           <Route
             path="/userRegister"
             element={
-              <Register title={`${system?.siteName || "Zing"}-Đăng ký`} />
+              <Register title={`${system?.siteName || "TopCV"}-Đăng ký`} />
             }
           ></Route>
           <Route
             path="/userForgotPassword"
             element={
               <ForgotPassword
-                title={`${system?.siteName || "Zing"}-Đổi mật khẩu`}
+                title={`${system?.siteName || "TopCV"}-Đổi mật khẩu`}
               />
             }
           ></Route>

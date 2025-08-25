@@ -267,7 +267,7 @@ function NewAddJobs() {
             />
 
             <div className="modal-buttons">
-              <button onClick={handleAddJobs}>Thêm mới</button>
+              <button onClick={handleAddJobs}>Thêm mới12</button>
               <button onClick={() => setShowAddModal(false)}>Hủy</button>
             </div>
           </div>

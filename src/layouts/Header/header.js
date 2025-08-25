@@ -9,6 +9,24 @@ function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false); // Trạng thái menu người dùng
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
 
+  const [userJobs, setUserJobs] = useState([]); // danh sách job đã ứng tuyển
+
+  const handleOpenSettings = async () => {
+    if (!user) return;
+
+    try {
+      const res = await fetch(
+        `http://localhost:9000/api/jobApplication/listJobApplications?user_id=${user._id}`
+      );
+      const data = await res.json();
+      if (data.success) {
+        setUserJobs(data.data); // lưu danh sách job đã ứng tuyển
+      }
+    } catch (err) {
+      console.error("Lỗi lấy job ứng tuyển:", err);
+    }
+  };
+
   useEffect(() => {
     fetch("http://localhost:9000/api/categories/getCategories")
       .then((res) => res.json())
@@ -164,9 +182,43 @@ function Header() {
               </label>
             </div>
 
-            <div className="headerUser-setting">
+            <div className="headerUser-setting" onClick={handleOpenSettings}>
               <i className="fa-solid fa-gear"></i>
             </div>
+
+            {isMenuOpen && (
+              <div className="user-menu">
+                {user ? (
+                  <div className="user-menu-title">
+                    <img src={user.avatar_url} alt={user.fullName} />
+                    <span>{user.fullName}</span>
+                    <button onClick={handleLogout}>Đăng xuất</button>
+
+                    <div className="user-jobs">
+                      <h4>Công việc đã ứng tuyển:</h4>
+                      {userJobs.length > 0 ? (
+                        userJobs.map((job) => (
+                          <div key={job._id}>
+                            <p>{job.job_id.title}</p>{" "}
+                            {/* job_id populate title */}
+                          </div>
+                        ))
+                      ) : (
+                        <p>Chưa ứng tuyển công việc nào</p>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="user-menu-titleNone">
+                    <p>Tài khoản: Chưa đăng nhập</p>
+                    <Link to="/userLogin">
+                      <button>Đăng nhập</button>
+                    </Link>
+                  </div>
+                )}
+              </div>
+            )}
+
             <div className="headerUser-id" onClick={toggleMenu}>
               <span>
                 {user ? (
@@ -181,7 +233,7 @@ function Header() {
               </span>
             </div>
 
-            {isMenuOpen && (
+            {/* {isMenuOpen && (
               <div className="user-menu">
                 {user ? (
                   <div className="user-menu-title">
@@ -198,7 +250,7 @@ function Header() {
                   </div>
                 )}
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </div>

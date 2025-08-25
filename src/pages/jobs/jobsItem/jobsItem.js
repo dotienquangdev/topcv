@@ -3,6 +3,7 @@ import "./jobsItem.css";
 import { useParams, useNavigate } from "react-router-dom";
 import { createJobsId } from "../../../services/jobs";
 import { Helmet } from "react-helmet-async";
+import { postJobApplication } from "../../../services/jobApplication";
 
 function JobsItemId({ title }) {
   const { id } = useParams();
@@ -11,16 +12,18 @@ function JobsItemId({ title }) {
   const [job, setJob] = useState(null);
   const [userApply, setUserApply] = useState(null);
   const [showApplyModal, setShowApplyModal] = useState(false);
-  const [showLoginNotice, setShowLoginNotice] = useState(false); // ✅ thêm state thông báo login
+  const [showLoginNotice, setShowLoginNotice] = useState(false);
 
+  // State cho form ứng tuyển
+  const [cvFile, setCvFile] = useState(null);
+  const [coverLetter, setCoverLetter] = useState("");
   useEffect(() => {
     const fetchJobsId = async () => {
       try {
         // Lấy dữ liệu job
         const dataJobsItem = await createJobsId(id);
         setJob(dataJobsItem.data);
-
-        // ✅ Lấy user từ localStorage
+        // Lấy user từ localStorage
         const userData = localStorage.getItem("user");
         if (userData) {
           setUserApply(JSON.parse(userData));
@@ -31,43 +34,42 @@ function JobsItemId({ title }) {
         console.error("Lỗi khi tải công việc:", error);
       }
     };
-
     if (id) fetchJobsId();
   }, [id]);
 
-  // Khi bấm ứng tuyển
-  const handleApplyClick = () => {
-    if (!userApply) {
-      // Nếu chưa login → hiện thông báo chứ chưa chuyển
-      setShowLoginNotice(true);
-      return;
-    }
-    setShowApplyModal(true);
-  };
-
+  // Hàm nộp đơn
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const formData = new FormData(e.target);
+    if (!userApply || !job) return;
+    const formData = new FormData();
     formData.append("user_id", userApply._id);
     formData.append("job_id", job._id);
+    formData.append("cover_letter", coverLetter);
 
+    if (cvFile) {
+      formData.append("cv_file", cvFile);
+    }
     try {
-      const res = await fetch("http://localhost:9000/api/job-applications", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await res.json();
-
-      if (data.success) {
+      const result = await postJobApplication(formData);
+      if (result.success) {
         alert("Ứng tuyển thành công!");
         setShowApplyModal(false);
       } else {
-        alert("Ứng tuyển thất bại!");
+        alert(result.message || "Ứng tuyển thất bại!");
       }
-    } catch (err) {
-      console.error("Lỗi gửi hồ sơ:", err);
+      console.log("Kết quả:", result);
+    } catch (error) {
+      console.error("Lỗi thêm jobApplication:", error);
+      alert("Đã xảy ra lỗi khi ứng tuyển.");
     }
+  };
+  // Khi bấm ứng tuyển
+  const handleApplyClick = () => {
+    if (!userApply) {
+      setShowLoginNotice(true); // Nếu chưa login → hiện thông báo
+      return;
+    }
+    setShowApplyModal(true);
   };
 
   if (!job) return <p>Đang tải dữ liệu...</p>;
@@ -126,45 +128,53 @@ function JobsItemId({ title }) {
             <div className="apply-section-information">
               <h4>Thông tin ứng viên</h4>
               <p>
-                Họ và tên:
-                <strong>{userApply.fullName}</strong>
+                Họ và tên: <strong>{userApply.fullName}</strong>
               </p>
               <p>
-                Email:
-                <strong>{userApply.email}</strong>
+                Email: <strong>{userApply.email}</strong>
               </p>
               <p>
-                Số điện thoại:
-                <strong>{userApply.phone}</strong>
+                Số điện thoại: <strong>{userApply.phone}</strong>
               </p>
             </div>
 
             <div className="apply-section apload-file-container">
               <label>Chọn CV để ứng tuyển</label>
               <input
-                name="profile_pic"
                 type="file"
                 accept=".pdf,.doc,.docx"
-                multiple
+                onChange={(e) => setCvFile(e.target.files[0])}
               />
             </div>
 
             <div className="apply-section">
               <label>Thư giới thiệu</label>
               <textarea
-                name="cover_letter"
+                value={coverLetter}
+                onChange={(e) => setCoverLetter(e.target.value)}
                 placeholder="Viết thư giới thiệu ngắn gọn..."
               ></textarea>
             </div>
 
             <div className="modal-actions">
               <button
+                type="button"
                 className="btn-cancel"
                 onClick={() => setShowApplyModal(false)}
               >
                 Hủy
               </button>
-              <button className="btn-submit">Nộp hồ sơ ứng tuyển</button>
+              <button type="submit" className="btn-submit">
+                Nộp hồ sơ ứng tuyển
+              </button>
+
+              <button
+                type="button"
+                className="btn-submits"
+                onClick={() => navigate("/tao-cv")}
+              >
+                Chưa có CV? Tạo CV
+              </button>
             </div>
           </form>
         </div>

@@ -13,21 +13,39 @@ export const _post = async (path, data) => {
   const options = {
     method: "POST",
     credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
   };
-
-  if (!isFormData) {
+  if (isFormData) {
+    options.body = data;
+  } else {
     options.headers = {
       Accept: "application/json",
       "Content-Type": "application/json",
     };
     options.body = JSON.stringify(data);
   }
-
   const response = await fetch(API + path, options);
   return response;
 };
+// export const _post = async (path, data) => {
+//   const isFormData = data instanceof FormData;
+//   const options = {
+//     method: "POST",
+//     credentials: "include",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify(data),
+//   };
+
+//   if (!isFormData) {
+//     options.headers = {
+//       Accept: "application/json",
+//       "Content-Type": "application/json",
+//     };
+//     options.body = JSON.stringify(data);
+//   }
+
+//   const response = await fetch(API + path, options);
+//   return response;
+// };
 
 export const _patch = async (path, data) => {
   const isFormData = data instanceof FormData;
