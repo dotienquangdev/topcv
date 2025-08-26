@@ -3,13 +3,15 @@ import {
   SEND_MESSAGE,
   RECEIVE_MESSAGE,
   SET_TYPING,
-  CLEAR_MESSAGES
+  CLEAR_MESSAGES,
+  SET_CHATBOT_MODE
 } from '../actions/chatbotActions';
 
 const initialState = {
   isOpen: false,
   messages: [],
-  isTyping: false
+  isTyping: false,
+  mode: 'ask' // 'ask' or 'agent'
 };
 
 const chatbotReducer = (state = initialState, action) => {
@@ -44,6 +46,13 @@ const chatbotReducer = (state = initialState, action) => {
       return {
         ...state,
         messages: []
+      };
+
+    case SET_CHATBOT_MODE:
+      return {
+        ...state,
+        mode: action.payload,
+        messages: [] // Clear messages when switching mode
       };
 
     default:
