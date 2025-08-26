@@ -3,15 +3,17 @@ const API_BASE_URL = process.env.REACT_APP_CHATBOT_API || "http://localhost:3001
 
 export const chatbotAPI = {
   // Gửi tin nhắn đến chatbot
-  sendMessage: async (message) => {
+  sendMessage: async (message, type = 'ask') => {
     try {
-      const response = await fetch(`${API_BASE_URL}/chat`, {
+      const endpoint = type === 'agent' ? '/agent' : '/chat';
+      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           message,
+          type,
           timestamp: new Date().toISOString(),
           sessionId:
             localStorage.getItem("chatSessionId") || generateSessionId(),

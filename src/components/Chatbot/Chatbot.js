@@ -3,25 +3,29 @@ import { useSelector, useDispatch } from 'react-redux';
 import ChatWindow from './ChatWindow';
 import ChatInput from './ChatInput';
 import './Chatbot.css';
-import { toggleChatbot, sendMessage, receiveMessage } from '../../actions/chatbotActions';
+import { toggleChatbot, sendMessage, receiveMessage, setChatbotMode } from '../../actions/chatbotActions';
 import { chatbotAPI } from '../../services/chatbotAPI';
 
 const Chatbot = () => {
   const dispatch = useDispatch();
-  const { isOpen, messages, isTyping } = useSelector(state => state.chatbot);
+  const { isOpen, messages, isTyping, mode } = useSelector(state => state.chatbot);
   const [isMinimized, setIsMinimized] = useState(false);
 
   useEffect(() => {
     // Thêm tin nhắn chào mừng khi mở chatbot lần đầu
     if (isOpen && messages.length === 0) {
+      const welcomeMessage = mode === 'agent' 
+        ? 'Xin chào! Tôi là AI Agent, có thể giúp bạn thực hiện các tác vụ phức tạp.'
+        : 'Xin chào! Tôi có thể trả lời câu hỏi của bạn.';
+      
       dispatch(receiveMessage({
         id: Date.now(),
-        text: 'Xin chào! Tôi có thể giúp gì cho bạn?',
+        text: welcomeMessage,
         sender: 'bot',
         timestamp: new Date().toISOString()
       }));
     }
-  }, [isOpen, messages.length, dispatch]);
+  }, [isOpen, messages.length, mode, dispatch]);
 
   const handleToggle = () => {
     dispatch(toggleChatbot());
@@ -30,6 +34,10 @@ const Chatbot = () => {
 
   const handleMinimize = () => {
     setIsMinimized(!isMinimized);
+  };
+
+  const handleModeChange = (newMode) => {
+    dispatch(setChatbotMode(newMode));
   };
 
   const handleSendMessage = async (text) => {
@@ -45,8 +53,8 @@ const Chatbot = () => {
     dispatch(sendMessage(userMessage));
 
     try {
-      // Gọi API chatbot
-      const response = await chatbotAPI.sendMessage(text);
+      // Gọi API chatbot với chế độ hiện tại
+      const response = await chatbotAPI.sendMessage(text, mode);
       
       // Simulate typing delay
       setTimeout(() => {
@@ -88,7 +96,7 @@ const Chatbot = () => {
           <span className="chatbot-avatar">🤖</span>
           <div>
             <h4>TopCV Assistant</h4>
-            <span className="online-status">Online</span>
+            <span className="online-status">Online - {mode === 'ask' ? 'Q&A Mode' : 'Agent Mode'}</span>
           </div>
         </div>
         <div className="chatbot-controls">
@@ -111,6 +119,20 @@ const Chatbot = () => {
       
       {!isMinimized && (
         <>
+          <div className="chatbot-mode-selector">
+            <button 
+              className={`mode-btn ${mode === 'ask' ? 'active' : ''}`}
+              onClick={() => handleModeChange('ask')}
+            >
+              Ask Mode
+            </button>
+            <button 
+              className={`mode-btn ${mode === 'agent' ? 'active' : ''}`}
+              onClick={() => handleModeChange('agent')}
+            >
+              Agent Mode
+            </button>
+          </div>
           <ChatWindow messages={messages} isTyping={isTyping} />
           <ChatInput onSendMessage={handleSendMessage} />
         </>
