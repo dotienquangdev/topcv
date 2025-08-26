@@ -138,3 +138,85 @@
   align-items: center;
   flex-wrap: wrap;
 }
+
+.user-settings {
+  position: absolute;
+  top: 60px; /* khoảng cách dưới header */
+  right: 80px; /* chỉnh theo vị trí icon setting */
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  width: 300px;
+  max-height: 400px;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+
+  /* animation */
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: slideDown 0.3s ease forwards;
+}
+
+@keyframes slideDown {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.user-settings h4 {
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.user-job-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.user-job-item:last-child {
+  border-bottom: none;
+}
+
+.job-title {
+  font-size: 14px;
+  color: #333;
+}
+
+.job-cv-link {
+  font-size: 13px;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.job-cv-link:hover {
+  text-decoration: underline;
+}
+
+.job-empty {
+  font-size: 14px;
+  color: #777;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.user-settings button {
+  display: block;
+  margin: 10px auto 0;
+  padding: 6px 12px;
+  background: #f44336;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.user-settings button:hover {
+  background: #d32f2f;
+}

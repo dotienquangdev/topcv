@@ -3,55 +3,67 @@ import "./headerUser.css";
 import dataHeader from "../../data/dataHeader";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+
 function Header() {
   const [dataCategories, setDataCategories] = useState([]);
-  const [user, setUser] = useState(null); // Lưu thông tin người dùng
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // Trạng thái menu người dùng
+  const [user, setUser] = useState(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // menu người dùng
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false); // popup cài đặt
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+  const [userJobs, setUserJobs] = useState([]);
 
-  const [userJobs, setUserJobs] = useState([]); // danh sách job đã ứng tuyển
-
-  const handleOpenSettings = async () => {
-    if (!user) return;
-
-    try {
-      const res = await fetch(
-        `http://localhost:9000/api/jobApplication/listJobApplications?user_id=${user._id}`
-      );
-      const data = await res.json();
-      if (data.success) {
-        setUserJobs(data.data); // lưu danh sách job đã ứng tuyển
-      }
-    } catch (err) {
-      console.error("Lỗi lấy job ứng tuyển:", err);
-    }
+  // toggle theme
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
   };
 
+  // fetch categories
   useEffect(() => {
     fetch("http://localhost:9000/api/categories/getCategories")
       .then((res) => res.json())
       .then((data) => setDataCategories(data.categories || []))
       .catch((err) => console.error(err));
   }, []);
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
-  };
-  // Kiểm tra người dùng đăng nhập từ localStorage
+
+  // lấy thông tin user từ localStorage
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user"));
-    if (userData) {
-      setUser(userData); // Lưu thông tin người dùng vào state
-    }
+    if (userData) setUser(userData);
   }, []);
-  // Hàm toggle mở/đóng menu người dùng
+
+  // toggle menu user
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-  // Hàm đăng xuất
+
+  // logout
   const handleLogout = () => {
-    localStorage.removeItem("user"); // Xóa thông tin người dùng khỏi localStorage
-    setUser(null); // Cập nhật lại state user là null
-    setIsMenuOpen(false); // Đóng menu
+    localStorage.removeItem("user");
+    setUser(null);
+    setIsMenuOpen(false);
+  };
+
+  // mở popup cài đặt
+  const handleOpenSettings = async () => {
+    if (!user) {
+      alert("Bạn cần đăng nhập để xem công việc đã ứng tuyển");
+      return;
+    }
+    try {
+      const res = await fetch(
+        `http://localhost:9000/api/jobApplication/getJobApplications`
+      );
+      const data = await res.json();
+      if (data.success) {
+        const userApplications = data.data.filter(
+          (jobApp) => jobApp.user_id === user._id
+        );
+        setUserJobs(userApplications);
+      }
+      setIsSettingsOpen(true);
+    } catch (err) {
+      console.error("Lỗi lấy job ứng tuyển:", err);
+    }
   };
 
   return (
@@ -66,6 +78,7 @@ function Header() {
           </a>
         </div>
 
+        {/* menu jobs */}
         <div className="topCV_jobs">
           {dataHeader.map((item, index) => (
             <div className="topcv_jobs-item" key={item.id || index}>
@@ -81,7 +94,6 @@ function Header() {
                     className={childItem.className}
                   >
                     {childItem.title && <p>{childItem.title}</p>}
-                    {/* Dynamic rendering of job categories */}
                     {childItem.id === "jobs_location" ? (
                       <div className="nav-subs dataCategories">
                         {dataCategories
@@ -91,9 +103,11 @@ function Header() {
                               cat.status === "inactive"
                           )
                           .map((cat) => (
-                            <div className="dataCategoriesText nav-icon nav-iconItems">
+                            <div
+                              key={cat._id}
+                              className="dataCategoriesText nav-icon nav-iconItems"
+                            >
                               <a
-                                key={cat._id}
                                 href={`/viec-lam/${cat.slug}`}
                                 className="nav-category-item"
                               >
@@ -134,7 +148,6 @@ function Header() {
                               </p>
                             </div>
                           ))}
-                          {/* childNewCVItem (CV theo vị trí) */}
                           {job.childNewCVItem?.map((cv, cvIdx) => (
                             <div key={cvIdx} className="cv-item">
                               {cv.icon && (
@@ -163,8 +176,10 @@ function Header() {
           ))}
         </div>
 
+        {/* user section */}
         <div className="topCV_user">
           <div className="header-user">
+            {/* theme switch */}
             <div className="switch-container">
               <input
                 type="checkbox"
@@ -182,10 +197,39 @@ function Header() {
               </label>
             </div>
 
+            {/* settings icon */}
             <div className="headerUser-setting" onClick={handleOpenSettings}>
               <i className="fa-solid fa-gear"></i>
             </div>
 
+            {/* popup settings hiển thị job ứng tuyển */}
+            {isSettingsOpen && (
+              <div className="user-settings">
+                <h4>Công việc đã ứng tuyển:</h4>
+                {userJobs.length > 0 ? (
+                  userJobs.map((job) => (
+                    <div key={job._id} className="user-job-item">
+                      <p className="job-title">
+                        {job.cover_letter || "Chưa có tiêu đề"}
+                      </p>
+                      <a
+                        href={job.cv_file_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="job-cv-link"
+                      >
+                        Xem CV
+                      </a>
+                    </div>
+                  ))
+                ) : (
+                  <p className="job-empty">Chưa ứng tuyển công việc nào</p>
+                )}
+                <button onClick={() => setIsSettingsOpen(false)}>Đóng</button>
+              </div>
+            )}
+
+            {/* user menu */}
             {isMenuOpen && (
               <div className="user-menu">
                 {user ? (
@@ -193,20 +237,6 @@ function Header() {
                     <img src={user.avatar_url} alt={user.fullName} />
                     <span>{user.fullName}</span>
                     <button onClick={handleLogout}>Đăng xuất</button>
-
-                    <div className="user-jobs">
-                      <h4>Công việc đã ứng tuyển:</h4>
-                      {userJobs.length > 0 ? (
-                        userJobs.map((job) => (
-                          <div key={job._id}>
-                            <p>{job.job_id.title}</p>{" "}
-                            {/* job_id populate title */}
-                          </div>
-                        ))
-                      ) : (
-                        <p>Chưa ứng tuyển công việc nào</p>
-                      )}
-                    </div>
                   </div>
                 ) : (
                   <div className="user-menu-titleNone">
@@ -219,6 +249,7 @@ function Header() {
               </div>
             )}
 
+            {/* avatar / login */}
             <div className="headerUser-id" onClick={toggleMenu}>
               <span>
                 {user ? (
@@ -232,25 +263,6 @@ function Header() {
                 )}
               </span>
             </div>
-
-            {/* {isMenuOpen && (
-              <div className="user-menu">
-                {user ? (
-                  <div className="user-menu-title">
-                    <img src={user.avatar_url} alt={user.fullName} />
-                    <span>{user.fullName}</span>
-                    <button onClick={handleLogout}>Đăng xuất</button>
-                  </div>
-                ) : (
-                  <div className="user-menu-titleNone">
-                    <p>Tài khoản: Chưa đăng nhập</p>
-                    <Link to="/userLogin">
-                      <button>Đăng nhập</button>
-                    </Link>
-                  </div>
-                )}
-              </div>
-            )} */}
           </div>
         </div>
       </div>
