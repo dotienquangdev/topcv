@@ -3,14 +3,12 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { postRegister } from "../../../services/user";
-
 function CompanyRegistration({ title }) {
   // User
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
   // Company
   const [companyName, setCompanyName] = useState("");
   const [website, setWebsite] = useState("");
@@ -19,12 +17,11 @@ function CompanyRegistration({ title }) {
   const [foundedYear, setFoundedYear] = useState("");
   const [description, setDescription] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
-
+  const [phone, setPhone] = useState("");
   // Others
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
   const handleRegister = async (e) => {
     e.preventDefault();
     setError("");
@@ -36,12 +33,12 @@ function CompanyRegistration({ title }) {
       setError("Mật khẩu không khớp.");
       return;
     }
-
     setLoading(true);
     const result = await postRegister({
       fullName,
       email,
       password,
+      phone,
       company: {
         name: companyName,
         website,
@@ -53,14 +50,12 @@ function CompanyRegistration({ title }) {
       },
     });
     setLoading(false);
-
     if (result.success) {
       navigate("/userLogin");
     } else {
       setError(result.message || "Đăng ký thất bại, thử lại sau!");
     }
   };
-
   return (
     <>
       <Helmet>
@@ -109,7 +104,6 @@ function CompanyRegistration({ title }) {
                 required
               />
             </div>
-
             {/* Cột phải - Company */}
             <div className="form-column">
               <h2 className="sub-title">Thông tin công ty</h2>
@@ -142,6 +136,13 @@ function CompanyRegistration({ title }) {
                 value={size}
                 onChange={(e) => setSize(e.target.value)}
               />
+              <label>Phone</label>
+              <input
+                className="userInputRegister"
+                placeholder="Phone"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+              />
               <label>Năm thành lập</label>
               <input
                 className="userInputRegister"
@@ -165,9 +166,7 @@ function CompanyRegistration({ title }) {
               />
             </div>
           </div>
-
           {error && <p className="error-text">{error}</p>}
-
           <div className="companyRegister-button">
             <button type="submit" disabled={loading}>
               {loading ? "Đang xử lý..." : "Đăng Ký Công Ty"}

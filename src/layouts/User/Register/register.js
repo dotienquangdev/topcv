@@ -17,6 +17,7 @@ function Register({ title }) {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
+  const [phone, setPhone] = useState("");
   const [step, setStep] = useState(1); // 1: Nhập email, 2: Nhập OTP + mật khẩu
 
   const handleSendOTP = async () => {
@@ -46,7 +47,7 @@ function Register({ title }) {
     e.preventDefault();
     setError("");
 
-    if (!fullName || !email || !password || !confirmPassword) {
+    if (!fullName || !email || !password || !phone || !confirmPassword) {
       setError("Vui lòng điền đầy đủ thông tin.");
       return;
     }
@@ -54,7 +55,7 @@ function Register({ title }) {
       setError("Mật khẩu không khớp.");
       return;
     }
-    const result = await postRegister({ fullName, email, password });
+    const result = await postRegister({ fullName, phone, email, password });
     if (result.success) {
       navigate("/userLogin");
     } else {
@@ -76,7 +77,7 @@ function Register({ title }) {
     setError("");
     setLoading(true);
     try {
-      const otpCheck = await otpPasswordPost({ email, otp }); // gọi API trước
+      const otpCheck = await otpPasswordPost({ email, otp });
 
       if (!otpCheck.success) {
         setError("OTP không chính xác.");
@@ -113,6 +114,16 @@ function Register({ title }) {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+
+          <label>Phone</label>
+          <input
+            className="userInputRegister"
+            placeholder="Nhập phone"
+            type="phone"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
             required
           />
 

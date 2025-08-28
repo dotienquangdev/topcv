@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { createJobsId } from "../../../services/jobs";
 import { Helmet } from "react-helmet-async";
 import { postJobApplication } from "../../../services/jobApplication";
+import NotificationBox from "../../../Notification/admin/Notification";
 
 function JobsItemId({ title }) {
   const { id } = useParams();
@@ -17,6 +18,13 @@ function JobsItemId({ title }) {
   // State cho form ứng tuyển
   const [cvFile, setCvFile] = useState(null);
   const [coverLetter, setCoverLetter] = useState("");
+
+  const [notif, setNotif] = useState({ show: false, type: "", content: "" });
+  //hiện thông báo
+  const showNotification = (content, type = "success") => {
+    setNotif({ show: true, type, content });
+    setTimeout(() => setNotif({ show: false, type: "", content: "" }), 3000);
+  };
   useEffect(() => {
     const fetchJobsId = async () => {
       try {
@@ -41,6 +49,16 @@ function JobsItemId({ title }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!userApply || !job) return;
+    // ✅ Kiểm tra coverLetter
+    if (!coverLetter || coverLetter.trim() === "") {
+      alert("Giới thiệu ngắn gọn về bẩn thân!");
+      return;
+    }
+    // ✅ Kiểm tra file CV
+    if (!cvFile) {
+      alert("Vui lòng chọn file CV!");
+      return;
+    }
     const formData = new FormData();
     formData.append("user_id", userApply._id);
     formData.append("job_id", job._id);
@@ -49,10 +67,12 @@ function JobsItemId({ title }) {
     if (cvFile) {
       formData.append("cv_file", cvFile);
     }
+
     try {
       const result = await postJobApplication(formData);
       if (result.success) {
-        alert("Ứng tuyển thành công!");
+        showNotification("Đã ứng tuyển thành công", "success");
+        // alert("Ứng tuyển thành công!");
         setShowApplyModal(false);
       } else {
         alert(result.message || "Ứng tuyển thất bại!");
@@ -63,6 +83,7 @@ function JobsItemId({ title }) {
       alert("Đã xảy ra lỗi khi ứng tuyển.");
     }
   };
+
   // Khi bấm ứng tuyển
   const handleApplyClick = () => {
     if (!userApply) {
@@ -80,6 +101,14 @@ function JobsItemId({ title }) {
         <title>{title}</title>
       </Helmet>
 
+      {notif.show && (
+        <NotificationBox
+          type={notif.type}
+          onClose={() => setNotif({ show: false, type: "", content: "" })}
+        >
+          {notif.content}
+        </NotificationBox>
+      )}
       <div className="job-details-container">
         <div className="job-summary-card">
           <div className="job-header">
@@ -148,7 +177,7 @@ function JobsItemId({ title }) {
             </div>
 
             <div className="apply-section">
-              <label>Thư giới thiệu</label>
+              <label>Giới thiệu về bản thân</label>
               <textarea
                 value={coverLetter}
                 onChange={(e) => setCoverLetter(e.target.value)}

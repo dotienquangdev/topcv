@@ -127,6 +127,9 @@
 .dataCategories-item:hover {
   background-color: rgb(234, 234, 234);
 }
+.light {
+  background-color: #000000;
+}
 .dataCategories-item {
   border-radius: 10px;
   display: flex;

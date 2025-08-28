@@ -1,8 +1,13 @@
 import { _get, _post, _delete } from "../utils/request";
 
-const postRegister = async ({ fullName, email, password }) => {
+const postRegister = async ({ fullName, email, phone, password }) => {
   try {
-    const res = await _post(`/user/register`, { fullName, email, password });
+    const res = await _post(`/user/register`, {
+      fullName,
+      phone,
+      email,
+      password,
+    });
     const result = await res.json();
 
     if (res.ok) {
