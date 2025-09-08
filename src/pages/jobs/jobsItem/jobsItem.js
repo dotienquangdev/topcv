@@ -171,7 +171,7 @@ function JobsItemId({ title }) {
               <label>Chọn CV để ứng tuyển</label>
               <input
                 type="file"
-                accept=".pdf,.doc,.docx"
+                accept=".pdf,.doc,.docx,.mp3"
                 onChange={(e) => setCvFile(e.target.files[0])}
               />
             </div>

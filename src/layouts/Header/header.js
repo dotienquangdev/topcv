@@ -190,9 +190,9 @@ function Header() {
               />
               <label htmlFor="themeSwitch">
                 {theme === "dark" ? (
-                  <i className="fa-solid fa-sun"></i>
+                  <i className="fa-solid fa-sun light"></i>
                 ) : (
-                  <i className="fa-solid fa-moon"></i>
+                  <i className="fa-solid fa-moon dark"></i>
                 )}
               </label>
             </div>

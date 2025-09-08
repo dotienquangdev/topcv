@@ -111,6 +111,7 @@ function CategoriesAdmin({ title }) {
       const data = await getCategories(page);
       setCategories(data.docs || []);
       setTotalPages(data.totalPages);
+
       showNotification("Đã thêm danh mục mới!", "success");
     } catch (error) {
       console.error("Lỗi khi thêm danh mục:", error);
@@ -149,6 +150,8 @@ function CategoriesAdmin({ title }) {
                 STT: {(page - 1) * pageSize + index + 1}
               </p>
               <p className="item-title">{category.name}</p>
+              <p className="item-title">{category.status}</p>
+              {/* <p className="item-title">{category.deleted}</p> */}
               <div className="btn-item">
                 <button onClick={() => handleViewDetails(category)}>
                   Chi tiết

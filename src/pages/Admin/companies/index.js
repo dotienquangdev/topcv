@@ -259,6 +259,8 @@ function CompaniesAdmin({ title }) {
               alt={company.name}
             />
             <p className="item item-title">{company.name}</p>
+            <p className="item item-title">{company.status}</p>
+            {/* <p className="item item-title">{company.deleted}</p> */}
             <div className="item btn-item">
               <button onClick={() => handleViewDetails(company)}>
                 Chi tiết
