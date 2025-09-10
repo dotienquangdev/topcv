@@ -10,6 +10,10 @@ import {
 import { createCompanies } from "../../../services/companies";
 import { getCategories } from "../../../services/categories";
 import NotificationBox from "../../../Notification/admin/Notification";
+import { getFormWorks } from "../../../services/formWorks";
+import { getWorkExperiences } from "../../../services/workExperiences";
+import { getExperienceLevels } from "../../../services/experienceLevels";
+import { getSkills } from "../../../services/skills";
 
 function JobsAdmin({ title }) {
   const [notif, setNotif] = useState({ show: false, type: "", content: "" });
@@ -28,18 +32,28 @@ function JobsAdmin({ title }) {
   const [categories, setCategories] = useState([]);
   const [showAddModal, setShowAddModal] = useState(false);
 
+  const [formWorks, setFormWorks] = useState([]);
+  const [workExperiences, setWorkExperiences] = useState([]);
+  const [experienceLevels, setExperienceLevels] = useState([]);
+  const [skills, setSkills] = useState([]);
+
   const [newJobs, setNewJobs] = useState({
     title: "",
     company_id: "",
     location: "",
     requirements: "",
-    job_type: "",
-    experience_level: "",
+    formWork_id: "",
+    workExperience_id: "",
+    experience_level_id: "",
     category_id: "",
     salary_min: "",
     salary_max: "",
+    skills: [],
     status: "active",
     deleted: false,
+    deadline: "",
+    description: "",
+    job_benefits: "",
     created_at: new Date(),
   });
 
@@ -63,11 +77,13 @@ function JobsAdmin({ title }) {
     };
     fetchJobs();
   }, [page]);
+
   const handleEdit = (job) => {
     setEditingJob(job);
     setShowEditPopup(true);
     handleViewDetails(false);
   };
+  console.log("new Jobs: ", newJobs);
   useEffect(() => {
     const fetchDropdownData = async () => {
       try {
@@ -76,7 +92,21 @@ function JobsAdmin({ title }) {
 
         const categoryData = await getCategories();
         setCategories(categoryData.docs || []);
+
+        const formWorksData = await getFormWorks();
+        setFormWorks(formWorksData.docs || []);
+
+        const workExperiencesData = await getWorkExperiences();
+        setWorkExperiences(workExperiencesData.docs || []);
+
+        const experienceLevelsData = await getExperienceLevels();
+        setExperienceLevels(experienceLevelsData.docs || []);
+
+        const skillData = await getSkills();
+        setSkills(skillData.docs || []);
         // console.log("categoryData: ", categoryData);
+        console.log("👉 Skills từ API:", skillData.docs);
+        console.log("new skill123: ", setSkills);
       } catch (error) {
         console.error("Lỗi khi tải company/category:", error);
       }
@@ -85,22 +115,42 @@ function JobsAdmin({ title }) {
   }, []);
 
   const handleAddJobs = async () => {
-    const min = Number(newJobs.salary_min);
-    const max = Number(newJobs.salary_max);
+    const min = parseFloat(newJobs.salary_min);
+    const max = parseFloat(newJobs.salary_max);
     if (
-      !newJobs.title.trim() ||
+      !newJobs.title?.trim() ||
       !newJobs.company_id ||
-      !newJobs.location.trim() ||
-      !newJobs.requirements.trim() ||
-      !newJobs.job_type.trim() ||
-      !newJobs.experience_level.trim() ||
+      !newJobs.location?.trim() ||
+      !newJobs.requirements?.trim() ||
+      !newJobs.formWork_id ||
+      !newJobs.workExperience_id ||
+      !newJobs.experience_level_id ||
       !newJobs.category_id ||
-      isNaN(min) ||
-      isNaN(max)
+      !newJobs.deadline.trim() ||
+      !newJobs.description.trim() ||
+      !newJobs.job_benefits.trim() ||
+      Number.isNaN(min) ||
+      Number.isNaN(max)
     ) {
+      console.log("⛔ Validate fail:", {
+        title: newJobs.title?.trim(),
+        company_id: newJobs.company_id,
+        location: newJobs.location?.trim(),
+        requirements: newJobs.requirements?.trim(),
+        formWork_id: newJobs.formWork_id,
+        workExperience_id: newJobs.workExperience_id,
+        experience_level_id: newJobs.experience_level_id,
+        category_id: newJobs.category_id,
+        deadline: newJobs.deadline,
+        description: newJobs.description,
+        job_benefits: newJobs.job_benefits,
+        min,
+        max,
+      });
       alert("Vui lòng nhập đầy đủ thông tin!");
       return;
     }
+
     if (min < 0) {
       alert("Lương tối thiểu phải >= 0");
       return;
@@ -130,6 +180,7 @@ function JobsAdmin({ title }) {
       alert("Có lỗi xảy ra khi thêm jobs");
     }
   };
+
   const handleDelete = async (jobId) => {
     const confirmed = window.confirm(
       "Bạn có chắc chắn muốn xóa công việc này?"
@@ -201,12 +252,12 @@ function JobsAdmin({ title }) {
       </div>
 
       {/* <AddJobs /> */}
-      {/* Add 1 */}
       {showAddModal && (
         <div className="modal-overlay">
           <div className="modal-content">
             <h5>Thêm công việc mới</h5>
             <form className="formAddJobs">
+              {/* Tiêu đề */}
               <input
                 placeholder="Tên công việc"
                 type="text"
@@ -215,7 +266,7 @@ function JobsAdmin({ title }) {
                   setNewJobs({ ...newJobs, title: e.target.value })
                 }
               />
-
+              {/* Công ty */}
               <select
                 value={newJobs.company_id}
                 onChange={(e) =>
@@ -229,6 +280,7 @@ function JobsAdmin({ title }) {
                   </option>
                 ))}
               </select>
+              {/* Địa điểm */}
               <input
                 placeholder="Địa chỉ"
                 type="text"
@@ -237,43 +289,104 @@ function JobsAdmin({ title }) {
                   setNewJobs({ ...newJobs, location: e.target.value })
                 }
               />
-              <input
-                placeholder="Yêu cầu công việc"
-                type="text"
-                value={newJobs.requirements}
+              {/* Hình thức làm việc (FormWork) */}
+              <select
+                value={newJobs.formWork_id}
                 onChange={(e) =>
-                  setNewJobs({ ...newJobs, requirements: e.target.value })
+                  setNewJobs({ ...newJobs, formWork_id: e.target.value })
                 }
-              />
-              <input
-                placeholder="Thời gian làm việc"
-                type="text"
-                value={newJobs.job_type}
+              >
+                <option value="">-- Chọn hình thức làm việc --</option>
+                {formWorks.map((fw) => (
+                  <option key={fw._id} value={fw._id}>
+                    {fw.formWorkName}
+                  </option>
+                ))}
+              </select>
+              {/* Kinh nghiệm (WorkExperience) */}
+              <select
+                value={newJobs.workExperience_id}
                 onChange={(e) =>
-                  setNewJobs({ ...newJobs, job_type: e.target.value })
+                  setNewJobs({ ...newJobs, workExperience_id: e.target.value })
                 }
-              />
-              <input
-                placeholder="Kinh nghiệm , trình độ"
-                type="text"
-                value={newJobs.experience_level}
+              >
+                <option value="">-- Chọn kinh nghiệm --</option>
+                {workExperiences.map((we) => (
+                  <option key={we._id} value={we._id}>
+                    {we.label}
+                  </option>
+                ))}
+              </select>
+              {/* Cấp bậc (ExperienceLevel) */}
+              <select
+                value={newJobs.experience_level_id}
                 onChange={(e) =>
-                  setNewJobs({ ...newJobs, experience_level: e.target.value })
+                  setNewJobs({
+                    ...newJobs,
+                    experience_level_id: e.target.value,
+                  })
                 }
-              />
+              >
+                <option value="">-- Chọn cấp bậc --</option>
+                {experienceLevels.map((el) => (
+                  <option key={el._id} value={el._id}>
+                    {el.experienceName}
+                  </option>
+                ))}
+              </select>
+              {/* Danh mục công việc */}
               <select
                 value={newJobs.category_id}
                 onChange={(e) =>
-                  setNewJobs({ ...newJobs, category_id: e.target.value })
+                  setNewJobs({
+                    ...newJobs,
+                    category_id: e.target.value,
+                    skills: [],
+                  })
                 }
               >
-                <option value="">-- Chọn danh mục công việc--</option>
+                <option value="">-- Chọn danh mục công việc --</option>
                 {categories.map((category) => (
                   <option key={category._id} value={category._id}>
                     {category.name}
                   </option>
                 ))}
               </select>
+              {/* Nếu đã chọn category thì show skills tương ứng */}
+              {newJobs.category_id && skills.length > 0 && (
+                <div className="skills-section">
+                  <p>Chọn kỹ năng yêu cầu:</p>
+                  {skills
+                    .filter(
+                      (skill) => skill.categoryId._id === newJobs.category_id
+                    ) // chỉ lấy skill cùng category
+                    .map((skill) => (
+                      <label key={skill._id}>
+                        <input
+                          type="checkbox"
+                          checked={newJobs.skills.includes(skill._id)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setNewJobs({
+                                ...newJobs,
+                                skills: [...newJobs.skills, skill._id],
+                              });
+                            } else {
+                              setNewJobs({
+                                ...newJobs,
+                                skills: newJobs.skills.filter(
+                                  (id) => id !== skill._id
+                                ),
+                              });
+                            }
+                          }}
+                        />
+                        {skill.name}
+                      </label>
+                    ))}
+                </div>
+              )}
+              {/* Lương tối thiểu */}
               <input
                 type="number"
                 min="0"
@@ -283,6 +396,7 @@ function JobsAdmin({ title }) {
                   setNewJobs({ ...newJobs, salary_min: Number(e.target.value) })
                 }
               />
+              {/* Lương tối đa */}
               <input
                 type="number"
                 min={Number(newJobs.salary_min) + 1}
@@ -292,14 +406,51 @@ function JobsAdmin({ title }) {
                   setNewJobs({ ...newJobs, salary_max: Number(e.target.value) })
                 }
               />
+              <label>
+                Ngày hết hạn:
+                <input
+                  type="date"
+                  value={newJobs.deadline}
+                  onChange={(e) =>
+                    setNewJobs({ ...newJobs, deadline: e.target.value })
+                  }
+                />
+              </label>
+
+              {/* Yêu cầu descriptionc */}
+              <textarea
+                placeholder="Nhập Mô tả công việc..."
+                value={newJobs.description}
+                onChange={(e) =>
+                  setNewJobs({ ...newJobs, description: e.target.value })
+                }
+              />
+              {/* Yêu cầu công việc */}
+              <textarea
+                placeholder="Nhập yêu cầu công việc..."
+                value={newJobs.requirements}
+                onChange={(e) =>
+                  setNewJobs({ ...newJobs, requirements: e.target.value })
+                }
+              />
+              {/* Yêu cầu công việc */}
+              <textarea
+                placeholder="Quyền lợi..."
+                value={newJobs.job_benefits}
+                onChange={(e) =>
+                  setNewJobs({ ...newJobs, job_benefits: e.target.value })
+                }
+              />
             </form>
+
             <div className="modal-buttons">
-              <button onClick={handleAddJobs}>Thêm mới123</button>
+              <button onClick={handleAddJobs}>Thêm mới</button>
               <button onClick={() => setShowAddModal(false)}>Hủy</button>
             </div>
           </div>
         </div>
       )}
+
       {/* // Sửa */}
       {showEditPopup && editingJob && (
         <div className="edit-overlay">
@@ -452,12 +603,20 @@ function JobsAdmin({ title }) {
               <p>
                 <strong>Requirements:</strong> {viewingJob.requirements}
               </p>
+
               <p>
-                <strong>Job Type:</strong> {viewingJob.job_type}
+                <strong>FormWork:</strong>{" "}
+                {viewingJob.formWork_id?.formWorkName}
               </p>
               <p>
-                <strong>Experience Level:</strong> {viewingJob.experience_level}
+                <strong>Kinh nghiệm:</strong>{" "}
+                {viewingJob.workExperience_id?.label}
               </p>
+              <p>
+                <strong>Cấp bậc:</strong>{" "}
+                {viewingJob.experience_level_id?.experienceName}
+              </p>
+
               <p>
                 <strong>Lương:</strong> {viewingJob.salary_min} -{" "}
                 {viewingJob.salary_max}

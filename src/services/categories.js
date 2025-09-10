@@ -30,7 +30,7 @@ const getCategories = async (
         currentPages: 1,
       };
     }
-
+    console.log("result:1234567 ", result);
     return { docs: [], totalPages: 1, currentPages: 1 };
   } catch (error) {
     console.error("Lỗi khi gọi API getCategories:", error);
