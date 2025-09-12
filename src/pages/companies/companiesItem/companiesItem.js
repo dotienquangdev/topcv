@@ -13,7 +13,7 @@ function CompaniesItem({ title }) {
       try {
         const dataCompaniesItem = await createCompaniesId(id);
         setCompanies(dataCompaniesItem.data);
-        console.log("dataCompaniesItem : ", dataCompaniesItem);
+        // console.log("dataCompaniesItem : ", dataCompaniesItem);
       } catch (error) {
         console.error("lỗi khi tải công ty", error);
       }

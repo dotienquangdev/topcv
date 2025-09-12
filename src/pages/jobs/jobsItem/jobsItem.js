@@ -125,22 +125,17 @@ function JobsItemId({ title }) {
 
           <div className="job-meta">
             <div className="meta-item">
-              💰 Lương: {job.salary_min} - {job.salary_max}
+              Vị trí tuyển dụng: {job.experience_level_id.experienceName || []}
             </div>
             <div className="meta-item">📍 Địa chỉ: {job.location || []}</div>
-            <div className="meta-item">📍 Địa chỉ: {job._id || []}</div>
+            <div className="meta-item">
+              Lương: {job.salary_min}-{job.salary_max} triệu
+            </div>
             <div className="meta-item">
               ⌛Hạn nộp hồ sơ: {new Date(job.deadline).toLocaleDateString()}
             </div>
             <div className="meta-item">
               🕒Ngày tạo {new Date(job.created_at).toLocaleDateString()}
-            </div>
-            <div className="meta-item">
-              Mô tả: {job.company_id.description || []}
-            </div>
-
-            <div className="meta-item">
-              Yêu cầu: {job.category_id.name || []}
             </div>
           </div>
 
@@ -151,34 +146,19 @@ function JobsItemId({ title }) {
             </div>
             <div className="meta-item">Nơi làm việc: {job.location || []}</div>
             <div className="meta-item">
-              Hình thức làm: {job.formWork_id.formWorkName || []}
+              Hình thức làm việc:
+              {job.formWork_id
+                ? job.formWork_id.formWorkName
+                : "Không xác định"}
             </div>
             <div className="meta-item">
-              Lương: {job.salary_min} - {job.salary_max}
+              Kinh nghiệm: {job.workExperience_id.label || []}
             </div>
             <div className="meta-item">
-              🗓️ Hạn nộp hồ sơ: {new Date(job.deadline).toLocaleDateString()}
-            </div>
-          </div>
-
-          <div className="job-meta job-metas">
-            <img
-              className="meta-item"
-              src={job.company_id.logo_url}
-              alt={job.title}
-            ></img>
-            <div className="meta-item">
-              Vị trí tuyển dụng: {job.experience_level_id.experienceName || []}{" "}
-              :
+              Lương: {job.salary_min}-{job.salary_max} triệu
             </div>
             <div className="meta-item">
-              Địa điểm làm việc: {job.location || []}
-            </div>
-            <div className="meta-item">
-              Lương: {job.company_id.description || []}
-            </div>
-            <div className="meta-item">
-              Lương: {job.salary_min}-{job.salary_max}
+              Vị trí tuyển dụng: {job.experience_level_id.experienceName || []}
             </div>
             <div className="meta-item">
               🗓️ Hạn nộp hồ sơ: {new Date(job.deadline).toLocaleDateString()}
@@ -200,7 +180,7 @@ function JobsItemId({ title }) {
               SDT: {job.company_id.companies_Phone || []}
             </div>
             <div className="meta-item">
-              Mã số thuế{job.company_id.tax_code || []}
+              Mã số thuế: {job.company_id.tax_code || []}
             </div>
             <div className="meta-item">
               Số nhân viên: {job.company_id.size || []}

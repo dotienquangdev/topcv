@@ -56,10 +56,11 @@ function Header() {
       const data = await res.json();
       if (data.success) {
         const userApplications = data.data.filter(
-          (jobApp) => jobApp.user_id === user._id
+          (jobApp) => jobApp.user_id._id === user._id
         );
         setUserJobs(userApplications);
       }
+      console.log("setUserJobs", setUserJobs);
       setIsSettingsOpen(true);
     } catch (err) {
       console.error("Lỗi lấy job ứng tuyển:", err);
@@ -210,8 +211,16 @@ function Header() {
                   userJobs.map((job) => (
                     <div key={job._id} className="user-job-item">
                       <p className="job-title">
-                        {job.cover_letter || "Chưa có tiêu đề"}
+                        {job.job_id.title || "Chưa có tiêu đề"}-applied
                       </p>
+                      <a
+                        href={`/userCVApply/${job._id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="job-cv-link"
+                      >
+                        Chi tiết
+                      </a>
                       <a
                         href={job.cv_file_url}
                         target="_blank"

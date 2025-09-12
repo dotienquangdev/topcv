@@ -35,11 +35,13 @@ const updateCompanies = async (_id, updatedData) => {
   }
   return JSON.parse(text);
 };
+
 const createCompaniesId = async (_id) => {
   const response = await _get(`/companies/detail/${_id}`);
   const result = await response.json();
   return result;
 };
+
 const deleteCompanyId = async (_id) => {
   const response = await _delete(`/companies/deleteCompanies/${_id}`);
   if (!response.ok) {

@@ -29,7 +29,7 @@ const getJobApplication = async (page = 1, limit = 8) => {
 };
 
 const listJobApplication = async (_id, updatedData) => {
-  const response = await _patch(
+  const response = await _get(
     `/jobApplication/listJobApplications/${_id}`,
     updatedData
   );
@@ -39,8 +39,9 @@ const listJobApplication = async (_id, updatedData) => {
   }
   return JSON.parse(text);
 };
+
 const patchJobApplication = async (_id) => {
-  const response = await _get(`/jobApplication/patchJobApplications/${_id}`);
+  const response = await _patch(`/jobApplication/patchJobApplications/${_id}`);
   const result = await response.json();
   return result;
 };

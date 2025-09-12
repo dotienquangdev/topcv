@@ -18,6 +18,7 @@ import Register from "../layouts/User/Register/register";
 import ForgotPassword from "../layouts/User/ForgotPassword/ForgotPassword";
 import Auth from "../layouts/User/Auth/auth";
 import CompanyRegistration from "../layouts/User/companyRegistration/companyRegistration";
+import UserApply from "../layouts/User/UserAppli/userAppli";
 
 function AllRouter() {
   const dispatch = useDispatch();
@@ -115,6 +116,14 @@ function AllRouter() {
             element={
               <CompaniesItem
                 title={`${system?.siteName || "TopCV"}-Companies Item`}
+              />
+            }
+          />
+          <Route
+            path="/userCVApply/:id"
+            element={
+              <UserApply
+                title={`${system?.siteName || "TopCV"}-userCVApply Item`}
               />
             }
           />
