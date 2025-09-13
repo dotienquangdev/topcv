@@ -17,9 +17,9 @@
     "redux": "^5.0.1",
     "web-vitals": "^2.1.4"
   },
-  "scripts": {
+  "scripts": { 
     "start": "set PORT=3002 && react-scripts start",
-    "build": "react-scripts build && CI=false npm install --legacy-peer-deps && next build",
+    "build": "npm install --legacy-peer-deps && next build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
