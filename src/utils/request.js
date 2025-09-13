@@ -1,4 +1,4 @@
-const API = "http://localhost:9000/api";
+const API = "http://localhost:9000/api" || `https://topcv-api.vercel.app/api`;
 
 export const _get = async (path) => {
   const response = await fetch(API + path, {

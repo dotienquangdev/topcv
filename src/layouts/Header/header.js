@@ -19,7 +19,10 @@ function Header() {
 
   // fetch categories
   useEffect(() => {
-    fetch("http://localhost:9000/api/categories/getCategories")
+    fetch(
+      "http://localhost:9000/api/categories/getCategories" ||
+        "https://topcv-api.vercel.app/api/categories/getCategories"
+    )
       .then((res) => res.json())
       .then((data) => setDataCategories(data.categories || []))
       .catch((err) => console.error(err));
@@ -51,7 +54,8 @@ function Header() {
     }
     try {
       const res = await fetch(
-        `http://localhost:9000/api/jobApplication/getJobApplications`
+        `http://localhost:9000/api/jobApplication/getJobApplications` ||
+          "https://topcv-api.vercel.app/api/jobApplication/getJobApplications"
       );
       const data = await res.json();
       if (data.success) {

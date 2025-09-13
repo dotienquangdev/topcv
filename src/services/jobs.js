@@ -8,9 +8,13 @@ const createJobs = async (
   order = "asc"
 ) => {
   try {
-    const res = await axios.get(`http://localhost:9000/api/jobs/getJobs`, {
-      params: { _page: page, _limit: limit, _sort: sort, _order: order },
-    });
+    const res = await axios.get(
+      `http://localhost:9000/api/jobs/getJobs` ||
+        `https://topcv-api.vercel.app/api/jobs/getJobs`,
+      {
+        params: { _page: page, _limit: limit, _sort: sort, _order: order },
+      }
+    );
 
     const data = res.data;
     if (data && data.docs) {

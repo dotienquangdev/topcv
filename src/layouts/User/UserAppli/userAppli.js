@@ -31,8 +31,10 @@ function UserApply({ title }) {
       <Helmet>
         <title>{title}</title>
       </Helmet>
-
       <div className="container mx-auto px-4 py-6">
+        <button>
+          <a href={`/`}>Quay lại</a>
+        </button>
         {/* Thông tin công ty */}
         <div className="bg-white rounded-2xl shadow-md p-4 md:p-6 mb-6">
           <div className="flex flex-col md:flex-row items-center md:items-start gap-4">
