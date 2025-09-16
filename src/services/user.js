@@ -34,11 +34,8 @@ const getUser = async (page = 1, limit = 8, sort = "title", order = "asc") => {
     const res = await _get(
       `/user/getLogin?_page=${page}&_limit=${limit}&_sort=${sort}&_order=${order}`
     );
-
     const data = (await res.json) ? await res.json() : res.data; // fallback nếu dùng fetch hoặc axios
-
     const result = data.user;
-
     if (data && data.docs) {
       return {
         docs: data.docs,
@@ -46,7 +43,6 @@ const getUser = async (page = 1, limit = 8, sort = "title", order = "asc") => {
         currentPages: data.currentPages || 1,
       };
     }
-
     if (Array.isArray(result)) {
       return {
         docs: result,
@@ -54,7 +50,6 @@ const getUser = async (page = 1, limit = 8, sort = "title", order = "asc") => {
         currentPages: 1,
       };
     }
-
     return { docs: [], totalPages: 1, currentPages: 1 };
   } catch (error) {
     console.error("Lỗi khi gọi API user:", error);

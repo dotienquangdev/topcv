@@ -82,10 +82,24 @@ const postJobApplication = async (jobApplication) => {
   }
 };
 
+const getJobApplication1 = async (page = 1, limit = 8) => {
+  try {
+    const res = await _get(
+      `/jobApplication/getJobApplications?_page=${page}&_limit=${limit}`
+    );
+    const data = await res.json();
+    return data; // trả y nguyên response từ backend
+  } catch (err) {
+    console.error("Lỗi khi gọi API jobApplication:", err);
+    return { success: false, data: [] };
+  }
+};
+
 export {
   postJobApplication,
   deleteJobApplication,
   getJobApplication,
   patchJobApplication,
   listJobApplication,
+  getJobApplication1,
 };

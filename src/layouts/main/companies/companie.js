@@ -12,7 +12,7 @@ function Companies() {
   useEffect(() => {
     const fetchData = async () => {
       const data = await createCompanies(page, limit);
-      console.log("data:", data);
+      // console.log("data:", data);
 
       if (data && Array.isArray(data.docs)) {
         setCompanies(data.docs); // ✅ lấy đúng mảng công ty
@@ -26,7 +26,7 @@ function Companies() {
     fetchData();
   }, [page]);
 
-  console.log("data123: ", companies);
+  // console.log("data123: ", companies);
 
   return (
     <>

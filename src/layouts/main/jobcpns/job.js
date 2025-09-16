@@ -84,6 +84,9 @@ function Jobs() {
       <a href="/userLogin">
         <button>userLogin</button>
       </a>
+      <a href="/vnpay">
+        <button>Nạp tiền</button>
+      </a>
       {error && <p>{error}</p>}
 
       <h2>Việc làm tốt nhất</h2>

@@ -37,7 +37,6 @@ const getCategories = async (
     return { docs: [], totalPages: 1, currentPages: 1 };
   }
 };
-
 const updateCategories = async (_id, updatedData) => {
   const response = await _patch(
     `/categories/putCategories/${_id}`,
@@ -49,7 +48,6 @@ const updateCategories = async (_id, updatedData) => {
   }
   return JSON.parse(text);
 };
-
 const createCategoriesId = async (_id) => {
   const response = await _get(`/categories/listCategories/${_id}`);
   const result = await response.json();
@@ -86,10 +84,20 @@ const createCategories = async (categories) => {
   }
 };
 
+const getCategories1 = async () => {
+  try {
+    const res = await _get("/categories/getCategories");
+    return res.json();
+  } catch (err) {
+    console.error("Lỗi getCategories:", err);
+    return { categories: [] };
+  }
+};
 export {
   getCategories,
   updateCategories,
   deleteCategoriesId,
   createCategoriesId,
   createCategories,
+  getCategories1,
 };

@@ -19,6 +19,7 @@ import ForgotPassword from "../layouts/User/ForgotPassword/ForgotPassword";
 import Auth from "../layouts/User/Auth/auth";
 import CompanyRegistration from "../layouts/User/companyRegistration/companyRegistration";
 import UserApply from "../layouts/User/UserAppli/userAppli";
+import Vnpay from "../layouts/main/vnpays/vnpay";
 
 function AllRouter() {
   const dispatch = useDispatch();
@@ -126,6 +127,10 @@ function AllRouter() {
                 title={`${system?.siteName || "TopCV"}-userCVApply Item`}
               />
             }
+          />
+          <Route
+            path="/vnpay"
+            element={<Vnpay title={`${system?.siteName || "TopCV"}-vnpay`} />}
           />
         </Route>
       </Routes>
