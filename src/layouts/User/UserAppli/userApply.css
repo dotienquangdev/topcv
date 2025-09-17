@@ -73,20 +73,6 @@
 .job-info {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 12px;
-  margin-top: 12px;
-}
-
-.job-info p {
-  background: #f9fafb;
-  padding: 10px 14px;
-  border-radius: 10px;
-  font-size: 0.95rem;
-  color: #374151;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: background 0.2s;
 }
 
 .job-info p:hover {

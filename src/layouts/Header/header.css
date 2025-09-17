@@ -28,7 +28,7 @@
   margin-right: 5px;
 }
 .topcv_jobs-item:hover {
-  color: #23bc67;
+  color: #ffffff;
 }
 .topCV_jobs {
   width: 656px;
@@ -53,9 +53,6 @@
   transition: transform 0.3s ease;
 }
 
-.topcv_jobs-item:hover .chevron-down {
-  transform: rotate(180deg);
-}
 .topcv_jobs-item {
   position: relative;
 }
@@ -79,10 +76,10 @@
 }
 
 /* Hover thì hiển thị */
-.topcv_jobs-item:hover .topcv_jobs-dropdown {
+/* .topcv_jobs-item:hover .topcv_jobs-dropdown {
   display: flex;
   justify-content: space-around;
-}
+} */
 .nav-item {
   margin-top: 10px;
   display: flex;
@@ -128,6 +125,7 @@
 .dataCategories-item:hover {
   background-color: rgb(234, 234, 234);
 }
+
 .light {
   background-color: #000000;
 }

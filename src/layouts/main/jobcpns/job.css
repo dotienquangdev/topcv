@@ -17,7 +17,7 @@
   align-items: center;
 }
 .job {
-  background-color: #ffffff;
+  /* background-color: #ffffff; */
   margin: 10px;
   /* padding: 10px; */
   width: 375px;
@@ -30,20 +30,13 @@
 }
 .job_item {
   border-radius: 10px;
-  box-shadow: 0px 5px 15px rgba(186, 186, 186, 0.25);
   width: 375px;
   height: 120px;
   display: flex;
   flex-wrap: wrap;
 }
-.job_item:hover {
-  border: 1.5px solid #00b14f;
-}
 .job_item:hover .job-description {
   color: #00b14f;
-}
-.job_item:hover .job-img {
-  border: 1px solid #00b14f;
 }
 .job-img {
   width: 55px;
@@ -61,7 +54,6 @@
 }
 .job-categoriesName {
   width: 100%;
-  font-size: 15px;
   color: #444444;
   font-weight: 550;
   margin-left: 11px;
@@ -91,9 +83,6 @@
   justify-content: space-around;
   align-items: center;
 }
-.job-many {
-  display: flex;
-}
 .job-size {
   color: black;
   font-size: 12px;
@@ -105,26 +94,12 @@
 .job-location {
   display: flex;
   justify-content: center;
-  /* width: 70px; */
-  padding: 7px;
-  background-color: #edeff0;
-  border-radius: 10px;
-  font-size: 12px;
-  margin: 3px;
-}
-.job-many {
-  margin: 3px;
-
-  display: flex;
-  justify-content: center;
-  /* width: 70px; */
-  padding: 7px;
-  background-color: #edeff0;
   border-radius: 10px;
   font-size: 12px;
 }
 .job-textItem {
-  /* width: 100%; */
+  width: 100%;
+  margin-top: 10px;
   display: flex;
 }
 

@@ -1,5 +1,6 @@
 import "./header.css";
 import "./headerUser.css";
+import "./header2.css";
 import dataHeader from "../../data/dataHeader";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
