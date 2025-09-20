@@ -16,17 +16,23 @@ function NewAddJobs() {
   const [categories, setCategories] = useState([]);
   const [showAddModal, setShowAddModal] = useState(false);
   const [newJobs, setNewJobs] = useState({
-    title: "",
+    category_id: "",
     company_id: "",
+    formWork: "",
+    experience_level: "",
+    workExperience: "",
     title: "",
+    description: "",
+    location: "",
     requirements: "",
     salary_min: "",
     salary_max: "",
-    job_type: "",
-    location: "",
-    experience_level: "",
-    category_id: "",
+    job_benefits: "",
+    deadline: "",
     status: "active",
+    outstanding: "",
+    created_at: new Date(),
+    updated_at: new Date(),
     deleted: false,
   });
 
@@ -37,17 +43,23 @@ function NewAddJobs() {
       if (result) {
         setShowAddModal(false);
         setNewJobs({
-          title: "",
+          category_id: "",
           company_id: "",
+          formWork: "",
+          experience_level: "",
+          workExperience: "",
           title: "",
+          description: "",
+          location: "",
           requirements: "",
           salary_min: "",
           salary_max: "",
-          job_type: "",
-          location: "",
-          experience_level: "",
-          category_id: "",
+          job_benefits: "",
+          deadline: "",
           status: "active",
+          outstanding: "",
+          created_at: new Date(),
+          updated_at: new Date(),
           deleted: false,
         });
         const updatedJobs = await createJobs();

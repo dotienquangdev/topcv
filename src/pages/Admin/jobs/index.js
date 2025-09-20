@@ -10,10 +10,6 @@ import {
 import { createCompanies } from "../../../services/companies";
 import { getCategories } from "../../../services/categories";
 import NotificationBox from "../../../Notification/admin/Notification";
-import { getFormWorks } from "../../../services/formWorks";
-import { getWorkExperiences } from "../../../services/workExperiences";
-import { getExperienceLevels } from "../../../services/experienceLevels";
-import { getSkills } from "../../../services/skills";
 
 function JobsAdmin({ title }) {
   const [notif, setNotif] = useState({ show: false, type: "", content: "" });
@@ -32,29 +28,25 @@ function JobsAdmin({ title }) {
   const [categories, setCategories] = useState([]);
   const [showAddModal, setShowAddModal] = useState(false);
 
-  const [formWorks, setFormWorks] = useState([]);
-  const [workExperiences, setWorkExperiences] = useState([]);
-  const [experienceLevels, setExperienceLevels] = useState([]);
-  const [skills, setSkills] = useState([]);
-
   const [newJobs, setNewJobs] = useState({
-    title: "",
+    category_id: "",
     company_id: "",
+    formWork: "",
+    experience_level: "",
+    workExperience: "",
+    title: "",
+    description: "",
     location: "",
     requirements: "",
-    formWork_id: "",
-    workExperience_id: "",
-    experience_level_id: "",
-    category_id: "",
     salary_min: "",
     salary_max: "",
-    skills: [],
-    status: "active",
-    deleted: false,
-    deadline: "",
-    description: "",
     job_benefits: "",
+    deadline: "",
+    status: "active",
+    outstanding: "",
     created_at: new Date(),
+    updated_at: new Date(),
+    deleted: false,
   });
 
   const showNotification = (content, type = "success") => {
@@ -92,21 +84,7 @@ function JobsAdmin({ title }) {
 
         const categoryData = await getCategories();
         setCategories(categoryData.docs || []);
-
-        const formWorksData = await getFormWorks();
-        setFormWorks(formWorksData.docs || []);
-
-        const workExperiencesData = await getWorkExperiences();
-        setWorkExperiences(workExperiencesData.docs || []);
-
-        const experienceLevelsData = await getExperienceLevels();
-        setExperienceLevels(experienceLevelsData.docs || []);
-
-        const skillData = await getSkills();
-        setSkills(skillData.docs || []);
         // console.log("categoryData: ", categoryData);
-        console.log("👉 Skills từ API:", skillData.docs);
-        console.log("new skill123: ", setSkills);
       } catch (error) {
         console.error("Lỗi khi tải company/category:", error);
       }
@@ -122,9 +100,9 @@ function JobsAdmin({ title }) {
       !newJobs.company_id ||
       !newJobs.location?.trim() ||
       !newJobs.requirements?.trim() ||
-      !newJobs.formWork_id ||
-      !newJobs.workExperience_id ||
-      !newJobs.experience_level_id ||
+      !newJobs.formWork ||
+      !newJobs.workExperience ||
+      !newJobs.experience_level ||
       !newJobs.category_id ||
       !newJobs.deadline.trim() ||
       !newJobs.description.trim() ||
@@ -137,9 +115,9 @@ function JobsAdmin({ title }) {
         company_id: newJobs.company_id,
         location: newJobs.location?.trim(),
         requirements: newJobs.requirements?.trim(),
-        formWork_id: newJobs.formWork_id,
-        workExperience_id: newJobs.workExperience_id,
-        experience_level_id: newJobs.experience_level_id,
+        formWork: newJobs.formWork,
+        workExperience: newJobs.workExperience,
+        experience_level: newJobs.experience_level,
         category_id: newJobs.category_id,
         deadline: newJobs.deadline,
         description: newJobs.description,
@@ -150,7 +128,6 @@ function JobsAdmin({ title }) {
       alert("Vui lòng nhập đầy đủ thông tin!");
       return;
     }
-
     if (min < 0) {
       alert("Lương tối thiểu phải >= 0");
       return;
@@ -180,7 +157,6 @@ function JobsAdmin({ title }) {
       alert("Có lỗi xảy ra khi thêm jobs");
     }
   };
-
   const handleDelete = async (jobId) => {
     const confirmed = window.confirm(
       "Bạn có chắc chắn muốn xóa công việc này?"
@@ -200,7 +176,6 @@ function JobsAdmin({ title }) {
   const handleUpdate = async () => {
     try {
       await updateJob(editingJob._id, editingJob); // gọi API sửa
-
       setShowEditPopup(false);
       const data = await createJobs(page);
       setJobs(data.docs || []);
@@ -290,50 +265,32 @@ function JobsAdmin({ title }) {
                 }
               />
               {/* Hình thức làm việc (FormWork) */}
-              <select
-                value={newJobs.formWork_id}
+              <input
+                placeholder="Hình thức làm việc"
+                type="text"
+                value={newJobs.formWork}
                 onChange={(e) =>
-                  setNewJobs({ ...newJobs, formWork_id: e.target.value })
+                  setNewJobs({ ...newJobs, formWork: e.target.value })
                 }
-              >
-                <option value="">-- Chọn hình thức làm việc --</option>
-                {formWorks.map((fw) => (
-                  <option key={fw._id} value={fw._id}>
-                    {fw.formWorkName}
-                  </option>
-                ))}
-              </select>
+              />
               {/* Kinh nghiệm (WorkExperience) */}
-              <select
-                value={newJobs.workExperience_id}
+              <input
+                placeholder="Kinh nghiệm"
+                type="text"
+                value={newJobs.workExperience}
                 onChange={(e) =>
-                  setNewJobs({ ...newJobs, workExperience_id: e.target.value })
+                  setNewJobs({ ...newJobs, workExperience: e.target.value })
                 }
-              >
-                <option value="">-- Chọn kinh nghiệm --</option>
-                {workExperiences.map((we) => (
-                  <option key={we._id} value={we._id}>
-                    {we.label}
-                  </option>
-                ))}
-              </select>
+              />
               {/* Cấp bậc (ExperienceLevel) */}
-              <select
-                value={newJobs.experience_level_id}
+              <input
+                placeholder="Kinh nghiệm"
+                type="text"
+                value={newJobs.experience_level}
                 onChange={(e) =>
-                  setNewJobs({
-                    ...newJobs,
-                    experience_level_id: e.target.value,
-                  })
+                  setNewJobs({ ...newJobs, experience_level: e.target.value })
                 }
-              >
-                <option value="">-- Chọn cấp bậc --</option>
-                {experienceLevels.map((el) => (
-                  <option key={el._id} value={el._id}>
-                    {el.experienceName}
-                  </option>
-                ))}
-              </select>
+              />
               {/* Danh mục công việc */}
               <select
                 value={newJobs.category_id}
@@ -352,40 +309,6 @@ function JobsAdmin({ title }) {
                   </option>
                 ))}
               </select>
-              {/* Nếu đã chọn category thì show skills tương ứng */}
-              {newJobs.category_id && skills.length > 0 && (
-                <div className="skills-section">
-                  <p>Chọn kỹ năng yêu cầu:</p>
-                  {skills
-                    .filter(
-                      (skill) => skill.categoryId._id === newJobs.category_id
-                    ) // chỉ lấy skill cùng category
-                    .map((skill) => (
-                      <label key={skill._id}>
-                        <input
-                          type="checkbox"
-                          checked={newJobs.skills.includes(skill._id)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setNewJobs({
-                                ...newJobs,
-                                skills: [...newJobs.skills, skill._id],
-                              });
-                            } else {
-                              setNewJobs({
-                                ...newJobs,
-                                skills: newJobs.skills.filter(
-                                  (id) => id !== skill._id
-                                ),
-                              });
-                            }
-                          }}
-                        />
-                        {skill.name}
-                      </label>
-                    ))}
-                </div>
-              )}
               {/* Lương tối thiểu */}
               <input
                 type="number"
@@ -416,7 +339,6 @@ function JobsAdmin({ title }) {
                   }
                 />
               </label>
-
               {/* Yêu cầu descriptionc */}
               <textarea
                 placeholder="Nhập Mô tả công việc..."
@@ -433,7 +355,6 @@ function JobsAdmin({ title }) {
                   setNewJobs({ ...newJobs, requirements: e.target.value })
                 }
               />
-              {/* Yêu cầu công việc */}
               <textarea
                 placeholder="Quyền lợi..."
                 value={newJobs.job_benefits}
@@ -442,7 +363,6 @@ function JobsAdmin({ title }) {
                 }
               />
             </form>
-
             <div className="modal-buttons">
               <button onClick={handleAddJobs}>Thêm mới</button>
               <button onClick={() => setShowAddModal(false)}>Hủy</button>
@@ -605,16 +525,14 @@ function JobsAdmin({ title }) {
               </p>
 
               <p>
-                <strong>FormWork:</strong>{" "}
-                {viewingJob.formWork_id?.formWorkName}
+                <strong>FormWork:</strong> {viewingJob.formWork?.formWorkName}
               </p>
               <p>
-                <strong>Kinh nghiệm:</strong>{" "}
-                {viewingJob.workExperience_id?.label}
+                <strong>Kinh nghiệm:</strong> {viewingJob.workExperience?.label}
               </p>
               <p>
                 <strong>Cấp bậc:</strong>{" "}
-                {viewingJob.experience_level_id?.experienceName}
+                {viewingJob.experience_level?.experienceName}
               </p>
 
               <p>
